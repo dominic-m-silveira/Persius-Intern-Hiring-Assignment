@@ -12,18 +12,16 @@ Posts List
     <div class="row" style="align-items: center;justify-content: center;">
         <div class='col-8'>
 
-            <form class="form" enctype="multipart/form-data"  method="POST">
+            <form class="form" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <div class="card" class="col-12">
                     <div class="card-body">
                         {{ form.content|as_crispy_field }}
                         {{ form.image|as_crispy_field }}
                         <input class="btn btn-primary" type="submit" value="Post">
-                        </div>
                     </div>
                 </div>
             </form>
-           
         </div>
     </div>
     <br>
@@ -31,20 +29,21 @@ Posts List
     <div class="row">
         {% for object in object_list %}
         <div class="col-sm-12 col-lg-4" style="margin-bottom: 20px;">
-            <div class="card h-100" >
+            <div class="card h-100">
                 <div class='card-body'>
                     <h5 class='card-title'>
                         <a href="{% url 'user-profile' slug=object.user.username %}" style='text-decoration:none;'>
                             {% if object.user.profile.image %}
-                                <img alt="{{ object.user.get_full_name }}" class="border rounded-circle border-white"
-                                                    src="{{ object.user.profile.image.url }}" style="width:25px;float: left;" />
+                            <img alt="{{ object.user.get_full_name }}" class="border rounded-circle border-white"
+                                src="{{ object.user.profile.image.url }}" style="width:25px;float: left;" />
                             {% elif object.user.socialaccount_set.all.0.get_avatar_url %}
-                                <img alt="{{ object.user.get_full_name }}" class="border rounded-circle border-white" 
-                                src="{{ object.user.socialaccount_set.all.0.get_avatar_url }}" style="width:25px;float: left;" />
-                                                <!--0 indicates the site used to sign up first-->
+                            <img alt="{{ object.user.get_full_name }}" class="border rounded-circle border-white"
+                                src="{{ object.user.socialaccount_set.all.0.get_avatar_url }}"
+                                style="width:25px;float: left;" />
+                            <!--0 indicates the site used to sign up first-->
                             {% else %}
-                                <img alt="{{ object.user.get_full_name }}" class="border rounded-circle border-white"
-                                                    src="{% static 'images/profile.png' %}" style="width:25px;float: left;" />
+                            <img alt="{{ object.user.get_full_name }}" class="border rounded-circle border-white"
+                                src="{% static 'images/profile.png' %}" style="width:25px;float: left;" />
                             {% endif %}
                             {{ object.user }}
                         </a>
@@ -52,21 +51,24 @@ Posts List
                         <span style='float: right;'>
                             <a data-toggle='dropdown'><img src="{% static 'images/more-24.png' %}"></a>
                             <div class='dropdown-menu dropdown-menu-right'>
-                                <small><a class='dropdown-item post-upd' href="{% url 'post:update' pk=object.id %}">Update</a></small>
-                                <small><a class='dropdown-item post-del' href="{% url 'post:delete' pk=object.id %}">Delete</a></small>
+                                <small><a class='dropdown-item post-upd'
+                                        href="{% url 'post:update' pk=object.id %}">Update</a></small>
+                                <small><a class='dropdown-item post-del'
+                                        href="{% url 'post:delete' pk=object.id %}">Delete</a></small>
                             </div>
                         </span>
                         {% endif %}
                     </h5>
-                    <small class='card-subtitle mb-2 text-muted' >
-                        <a href="{% url 'post:detail' pk=object.id %}" style='color:black;text-decoration:none;'>{{ object.updated_on }}</a>
+                    <small class='card-subtitle mb-2 text-muted'>
+                        <a href="{% url 'post:detail' pk=object.id %}"
+                            style='color:black;text-decoration:none;'>{{ object.updated_on }}</a>
                     </small>
                     <p class='card-text'>{{ object.content }}</p>
-                    <img src="{{ object.image.url }}" style="width: 100%;height: 450px;object-fit: cover;"/> 
-                </div> 
+                    <img src="{{ object.image.url }}" style="width: 100%;height: 450px;object-fit: cover;" />
+                </div>
             </div>
         </div>
-        
+
         {% endfor %}
     </div>
 </div>

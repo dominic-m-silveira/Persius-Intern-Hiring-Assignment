@@ -1,7 +1,7 @@
 {% load static %}
 <!-- Modal -->
-<div aria-hidden="true" aria-labelledby="FollowingModalLongTitle" class="modal fade" id="FollowingModalLong" role="dialog"
-     tabindex="-1">
+<div aria-hidden="true" aria-labelledby="FollowingModalLongTitle" class="modal fade" id="FollowingModalLong"
+    role="dialog" tabindex="-1">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,21 +18,22 @@
                             <a href="/profile/{{user.username}}" style='text-decoration:none;'>
                                 {% if user.profile.image %}
                                 <img alt="{{ user.get_full_name }}" class="border rounded-circle border-white"
-                                     id="following-image-{{user.username}}" src="{{ user.profile.image.url }}"
-                                     style="width:26px;float: left;"/>
+                                    id="following-image-{{user.username}}" src="{{ user.profile.image.url }}"
+                                    style="width:26px;float: left;" />
                                 {% elif user.socialaccount_set.all.0.get_avatar_url %}
-                                <img alt="{{ user.get_full_name }}"
-                                     class="border rounded-circle border-white" id="following-image-{{user.username}}"
-                                     src="{{ user.socialaccount_set.all.0.get_avatar_url }}" style="width:26px;float: left;"/>
+                                <img alt="{{ user.get_full_name }}" class="border rounded-circle border-white"
+                                    id="following-image-{{user.username}}"
+                                    src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                                    style="width:26px;float: left;" />
                                 {% else %}
                                 <img alt="{{ user.get_full_name }}" class="border rounded-circle border-white"
-                                     id="following-image-{{user.username}}" src="{% static 'images/profile.png' %}"
-                                     style="width:26px;float: left;"/>
+                                    id="following-image-{{user.username}}" src="{% static 'images/profile.png' %}"
+                                    style="width:26px;float: left;" />
                                 {% endif %}
                                 &nbsp;&nbsp;{{user.username}}</a>
-                            <a class="btn btn-outline-primary user-following"
-                               data-id='{{user.username}}' href="{% url 'user-follow' slug=user.username %}"
-                               id='following-{{user.username}}' style="width:90px;float:right;">Following</a>
+                            <a class="btn btn-outline-primary user-following" data-id='{{user.username}}'
+                                href="{% url 'user-follow' slug=user.username %}" id='following-{{user.username}}'
+                                style="width:90px;float:right;">Following</a>
 
                         </h5>
                     </li>
@@ -46,7 +47,7 @@
 </div>
 
 <div class="modal fade" id="FollowersModalLong" tabindex="-1" role="dialog" aria-labelledby="FollowersModalLongTitle"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -64,32 +65,32 @@
                             <a href="/profile/{{user.user.username}}" style='text-decoration:none;'>
                                 {% if user.user.profile.image %}
                                 <img src="{{ user.user.profile.image.url }}" alt="{{ user.user.get_full_name }}"
-                                     style="width:26px;float: left;" class="border rounded-circle border-white"/>
+                                    style="width:26px;float: left;" class="border rounded-circle border-white" />
                                 {% elif user.user.socialaccount_set.all.0.get_avatar_url %}
                                 <img src="{{ user.user.socialaccount_set.all.0.get_avatar_url }}"
-                                     alt="{{ user.user.get_full_name }}" style="width:26px;float: left;"
-                                     class="border rounded-circle border-white"/>
+                                    alt="{{ user.user.get_full_name }}" style="width:26px;float: left;"
+                                    class="border rounded-circle border-white" />
                                 <!--0 indicates the site used to sign up first-->
                                 {% else %}
                                 <img src="{% static 'images/profile.png' %}" alt="{{ user.user.get_full_name }}"
-                                     style="width:26px;float: left;" class="border rounded-circle border-white"/>
+                                    style="width:26px;float: left;" class="border rounded-circle border-white" />
                                 {% endif %}
                                 &nbsp;&nbsp;{{user.user.username}}</a>
                             <div style="width:110px;float:right;">
                                 {% if user.user.username in followusers %}
                                 <a href="{% url 'user-follow' slug=user.user.username %}"
-                                   class="btn btn-outline-primary user-follower" data-id='{{user.user.username}}'
-                                   id='follower-{{user.user.username}}' style="width:90px;">Following</a>
+                                    class="btn btn-outline-primary user-follower" data-id='{{user.user.username}}'
+                                    id='follower-{{user.user.username}}' style="width:90px;">Following</a>
                                 {% else %}
                                 <a href="{% url 'user-follow' slug=user.user.username %}"
-                                   class="btn btn-primary user-follower" data-id='{{user.user.username}}'
-                                   id='follower-{{user.user.username}}' style="width:90px;">Follow</a>
+                                    class="btn btn-primary user-follower" data-id='{{user.user.username}}'
+                                    id='follower-{{user.user.username}}' style="width:90px;">Follow</a>
                                 {% endif %}
                                 {% ifequal request.user.username object.username %}
                                 <a href="{% url 'user-follow-remove' slug=user.user.username %}"
-                                   class="user-followremove" data-id='{{user.user.username}}'
-                                   id='follower-{{user.user.username}}'
-                                   style="width:10px;float:right;text-decoration:none;">&times;</a>
+                                    class="user-followremove" data-id='{{user.user.username}}'
+                                    id='follower-{{user.user.username}}'
+                                    style="width:10px;float:right;text-decoration:none;">&times;</a>
                                 {% endifequal %}
                             </div>
                         </h5>

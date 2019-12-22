@@ -13,10 +13,9 @@ from django import forms
 from django.core.exceptions import PermissionDenied
 from .forms import UpdateProfileForm, UpdateUserForm
 from django import http
+from posts.models import Post
 
 User = get_user_model()
-toggle_user = None
-
 
 class UserDetailsUpdateView(UpdateView):
     template_name = "user/user_update.html"
@@ -77,24 +76,9 @@ class UserDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(UserDetailView, self).get_context_data(*args, **kwargs)
-        user_profile = Profile.objects.get(user=self.request.user)
-        # print("get_context_data",self.args, self.kwargs,self.request.user,self.kwargs['slug'])
+        context["object_list"] = Post.objects.filter(user=self.request.user)
         print(context)
         return context
-
-
-
-def home(request):
-    count = User.objects.count()
-    # return render(request,'home.html',{
-    #     'user_count':count
-    # })
-    return redirect("account_login")
-
-
-@login_required(login_url='account_login')
-def secret_page(request):
-    return render(request, 'secret_page.html')
 
 
 @login_required(login_url='account_login')

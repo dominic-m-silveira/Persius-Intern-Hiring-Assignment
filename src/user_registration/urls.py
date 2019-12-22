@@ -1,12 +1,10 @@
 from django.urls import path, include
 from django.contrib.auth.decorators import login_required
-from .views import home, secret_page, settings, UserDetailView, \
+from .views import settings, UserDetailView, \
     UserDetailsUpdateView, UserProfileDetailsUpdateView, UserDeleteView
 from allauth.account.views import EmailView as allauth_AccountEmail
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('secret/', secret_page, name='secret'),
     path('accounts/email/', allauth_AccountEmail.as_view(), name='account_email'),
     path('accounts/', include('allauth.urls')),
     path('settings/', login_required(settings), name='settings'),

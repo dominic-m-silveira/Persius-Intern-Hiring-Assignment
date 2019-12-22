@@ -19,28 +19,28 @@ Secret
             <div class="list-group border bg-white" style="min-height:700px; overflow:auto;">
                 <a class="list-group-item list-group-item-action
                                 {% if request.resolver_match.url_name == 'upd-user' %}active{%endif%}"
-                   href="{% url 'upd-user' slug=request.user.username %}">General</a>
+                    href="{% url 'upd-user' slug=request.user.username %}">General</a>
                 <a class="list-group-item list-group-item-action
                                 {% if request.resolver_match.url_name == 'upd-profile' %}active{%endif%}"
-                   href="{% url 'upd-profile' pk=request.user.profile.pk %}">Profile</a>
+                    href="{% url 'upd-profile' pk=request.user.profile.pk %}">Profile</a>
                 <a class="list-group-item list-group-item-action
                                 {% if request.resolver_match.url_name == 'account_email' %}active{%endif%}"
-                   href="{% url 'account_email' %}">Account</a>
+                    href="{% url 'account_email' %}">Account</a>
                 {%if user.has_usable_password %}
                 <a class="list-group-item list-group-item-action
                                     {% if request.resolver_match.url_name == 'account_change_password' %}active{%endif%}"
-                   href="{% url 'account_change_password' %}">Change Password</a>
+                    href="{% url 'account_change_password' %}">Change Password</a>
                 {%elif not user.has_usable_password %}
                 <a class="list-group-item list-group-item-action
                                     {% if request.resolver_match.url_name == 'account_set_password' %}active{%endif%}"
-                   href="{% url 'account_set_password' %}">Set Password</a>
+                    href="{% url 'account_set_password' %}">Set Password</a>
                 {%endif%}
                 <a class="list-group-item list-group-item-action
                                 {% if request.resolver_match.url_name == 'socialaccount_connections' %}active{%endif%}"
-                   href="{% url 'socialaccount_connections' %}">Connections</a>
+                    href="{% url 'socialaccount_connections' %}">Connections</a>
                 <a class="list-group-item list-group-item-action
                                 {% if request.resolver_match.url_name == 'del-user' %}active{%endif%}"
-                   href="{% url 'del-user' slug=request.user.username %}">Delete Account</a>
+                    href="{% url 'del-user' slug=request.user.username %}">Delete Account</a>
             </div>
 
 
