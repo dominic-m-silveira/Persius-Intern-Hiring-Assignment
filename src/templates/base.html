@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <title>{%if user.is_authenticated%}{{user.username}}{%else%}Welcome{%endif%} - {%block head_title%}{%endblock head_title%}</title>
+    {% include "base/base_css.html" %}
+
+    {%block head%}
+    {%endblock head%}
+
+</head>
+<!---->
+<body class="bg-light" id="outercontent"><!--oncontextmenu="return false;"-->
+<div>
+    {% include "base/navbar.html" with sitename="DMS" link="link" %}
+    <br>
+    <div>
+        <div class="container" id="content" style="margin-top:50px">
+            {%block body%}
+            {%endblock body%}
+        </div>
+    </div>
+</div>
+{%block nocontainerbody%}
+{%endblock nocontainerbody%}
+
+{% include "base/base_js.html" %}
+{% include "base/loadPostData.html" %}
+
+{% block javascript %}
+{% endblock %}
+<script>
+    document.getElementById("searchBox").focus();
+</script>
+</body>
+</html>

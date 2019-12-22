@@ -1,0 +1,143 @@
+{% extends "settings.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Update Profile" %}{% endblock %}
+
+
+{% block content %}
+<form class="form" enctype='multipart/form-data' id="userprofileUpd" method="POST">
+    {% csrf_token %}
+    {{ form.location|as_crispy_field }}
+
+    {{ form.x }}
+    {{ form.y }}
+    {{ form.width }}
+    {{ form.height }}
+    {% if request.user.profile.image %}
+    <img alt="{{ request.user.get_full_name }}" class="border rounded-circle border-white" src="{{ request.user.profile.image.url }}"
+         style="width:150px;"/>
+    {% elif request.user.socialaccount_set.all.0.get_avatar_url %}
+    <img alt="{{ request.user.get_full_name }}" class="border rounded-circle border-white"
+         src="{{ request.user.socialaccount_set.all.0.get_avatar_url }}" style="width:150px;"/>
+    <!--0 indicates the site used to sign up first-->
+    {% else %}
+    <img alt="{{ request.user.get_full_name }}" class="border rounded-circle border-white" src="{% static 'images/profile.png' %}"
+         style="width:150px;"/>
+    {% endif %}
+    <br>
+    <div class="input-group">
+        <div class="custom-file">
+            {% comment %} <input accept="image/*" class="custom-file-input clearablefileinput" id="id_image" name="image"
+                                 onchange="readCreateURL(this);" type="file">
+            <label class="btn btn-primary" for="id_image" id="id_image_label">Browse</label> {% endcomment %}
+            <label class="btn btn-outline-primary" for="id_image" id="id_image_label"> Browse <input accept="image/*"
+                                                                                                     class="custom-file-input clearablefileinput"
+                                                                                                     hidden
+                                                                                                     id="id_image"
+                                                                                                     name="image"
+                                                                                                     type="file">
+            </label>
+
+        </div>
+    </div>
+    <br>
+    <input class="btn btn-primary mr-2" type="submit" value="Update Profile">
+</form>
+{%endblock%}
+
+{%block nocontainerbody%}
+<div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Crop the photo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <img src="" id="image" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group pull-left" role="group">
+                    <button type="button" class="btn btn-default js-zoom-in">
+                        <span class="glyphicon glyphicon-zoom-in"></span>
+                    </button>
+                    <button type="button" class="btn btn-default js-zoom-out">
+                        <span class="glyphicon glyphicon-zoom-out"></span>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock nocontainerbody%}
+
+
+{% block javascript %}
+<script>
+$(function () {
+
+      /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+      $("#id_image").change(function () {
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $("#image").attr("src", e.target.result);
+            console.log(e.target.result)
+            $("#modalCrop").modal("show");
+          }
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+      var $image = $("#image");
+      var cropBoxData;
+      var canvasData;
+      $("#modalCrop").on("shown.bs.modal", function () {
+        $image.cropper({
+          viewMode: 1,
+          aspectRatio: 1/1,
+          minCropBoxWidth: 200,
+          minCropBoxHeight: 200,
+          ready: function () {
+            $image.cropper("setCanvasData", canvasData);
+            $image.cropper("setCropBoxData", cropBoxData);
+          }
+        });
+      }).on("hidden.bs.modal", function () {
+        cropBoxData = $image.cropper("getCropBoxData");
+        canvasData = $image.cropper("getCanvasData");
+        $image.cropper("destroy");
+      });
+
+      $(".js-zoom-in").click(function () {
+        $image.cropper("zoom", 0.1);
+      });
+
+      $(".js-zoom-out").click(function () {
+        $image.cropper("zoom", -0.1);
+      });
+
+      /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+      $(".js-crop-and-upload").click(function () {
+        var cropData = $image.cropper("getData");
+        $("#id_x").val(cropData["x"]);
+        $("#id_y").val(cropData["y"]);
+        $("#id_height").val(cropData["height"]);
+        $("#id_width").val(cropData["width"]);
+        $('#modalCrop').modal('hide');
+        console.log(cropData["x"],cropData["y"],cropData["height"],cropData["width"])
+        $("#userprofileUpd").submit();
+      });
+    });
+
+
+</script>
+{% endblock %}

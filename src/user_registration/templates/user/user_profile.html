@@ -1,0 +1,75 @@
+{%extends 'base.html'%}
+{% load static %}
+
+{%block head_title%}
+Profile
+{%endblock head_title%}
+
+
+{%block body%}
+{% include "posts/post_modal.html" %}
+{% include "user/users_modal.html" with followingusers=object.profile.get_following.all followersusers=object.followed_by.all %}
+<div class="container">
+    <div style="align-items: center;justify-content: center;text-align: center;">
+
+        <div style="display: flex;align-items: center;justify-content: center;text-align: center;">
+            {% if user.profile.image %}
+            <img alt="{{ user.get_full_name }}" class="border rounded-circle border-white"
+                 id="following-image-{{user.username}}" src="{{ user.profile.image.url }}"
+                 style="width:75px;float: left;"/>
+            {% elif user.socialaccount_set.all.0.get_avatar_url %}
+            <img alt="{{ user.get_full_name }}" class="border rounded-circle border-white"
+                 id="following-image-{{user.username}}" src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                 style="width:75px;float: left;"/>
+            {% else %}
+            <img alt="{{ user.get_full_name }}" class="border rounded-circle border-white"
+                 id="following-image-{{user.username}}" src="{% static 'images/profile.png' %}"
+                 style="width:75px;float: left;"/>
+            {% endif %}
+            <h3><b>{{object.username}}</b></h3>
+        </div>
+        <br>
+        {% ifnotequal request.user.username object.username %}
+        <p>
+            <a class="user-follow btn btn-primary" data-id='{{object.username}}'
+               href='{{object.profile.get_follow_url}}' id='follow-{{object.username}}'>
+                {% if following %}Unfollow{% else %}Follow{% endif %}
+            </a>
+        </p>
+        {% endifnotequal %}
+
+        <button class="user-following-btn btn btn-outline-secondary" data-count="{{object.profile.get_following.count}}" data-id='{{request.user.username}}'
+                data-target="#FollowingModalLong" data-toggle="modal"
+                id="following-count-{{object.username}}" type="button">
+            Following: {{object.profile.get_following.count}}
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="user-followers-btn btn btn-outline-secondary" data-count="{{object.followed_by.all.count}}" data-id='{{request.user.username}}'
+                data-target="#FollowersModalLong" data-toggle="modal"
+                id="followers-count-{{object.username}}" type="button">
+            Followers: {{object.followed_by.all.count}}
+        </button>
+
+        <br><br>
+        <h4>Posts</h4>
+    </div>
+
+    <div class="row" data-url="/profile/api/{{object.username}}/" id="post-container"
+         style="align-items: center;justify-content: center;">
+
+    </div>
+    <div style="align-items: center;justify-content: center;text-align: center;">
+        <a class="btn btn-outline-primary" href="#" id="load_more_posts">Load More</a>
+    </div>
+    <br>
+</div>
+
+{%endblock%}
+
+{% block javascript %}
+<script>
+        $(document).ready(function(){
+            loadPostData("post-container")
+        });
+
+</script>
+{% endblock %}

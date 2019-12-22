@@ -1,0 +1,31 @@
+.asteriskField{
+    display: none;
+}
+
+img {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+@media print {
+    html, body {
+        display: none;  /* hide whole page */
+    }
+}
+
+
+#connections_radio.active{
+    background-color: green;
+}
+
+.heart {
+  font-size: 25px;
+	color:red;
+}
+
+
+
+
+
+

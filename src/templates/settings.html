@@ -1,0 +1,61 @@
+{%extends 'base.html'%}
+
+{%block head_title%}
+Secret
+{%endblock head_title%}
+
+{%block body%}
+<h3 style="align-items: center;justify-content: center;text-align: center;">Settings</h3>
+<br>
+{% comment %}
+{{request.user.id|add:'1'}}
+{{request.user.profile.pk}}
+{{request.user.profile.user.id|add:'1'}}
+{% endcomment %}
+
+<div class="card bg-light">
+    <div class="row" style="margin-right: 0;margin-left: 0;">
+        <div class="col-3 mr-auto" style="padding-right: 0;padding-left: 0;">
+            <div class="list-group border bg-white" style="min-height:700px; overflow:auto;">
+                <a class="list-group-item list-group-item-action
+                                {% if request.resolver_match.url_name == 'upd-user' %}active{%endif%}"
+                   href="{% url 'upd-user' slug=request.user.username %}">General</a>
+                <a class="list-group-item list-group-item-action
+                                {% if request.resolver_match.url_name == 'upd-profile' %}active{%endif%}"
+                   href="{% url 'upd-profile' pk=request.user.profile.pk %}">Profile</a>
+                <a class="list-group-item list-group-item-action
+                                {% if request.resolver_match.url_name == 'account_email' %}active{%endif%}"
+                   href="{% url 'account_email' %}">Account</a>
+                {%if user.has_usable_password %}
+                <a class="list-group-item list-group-item-action
+                                    {% if request.resolver_match.url_name == 'account_change_password' %}active{%endif%}"
+                   href="{% url 'account_change_password' %}">Change Password</a>
+                {%elif not user.has_usable_password %}
+                <a class="list-group-item list-group-item-action
+                                    {% if request.resolver_match.url_name == 'account_set_password' %}active{%endif%}"
+                   href="{% url 'account_set_password' %}">Set Password</a>
+                {%endif%}
+                <a class="list-group-item list-group-item-action
+                                {% if request.resolver_match.url_name == 'socialaccount_connections' %}active{%endif%}"
+                   href="{% url 'socialaccount_connections' %}">Connections</a>
+                <a class="list-group-item list-group-item-action
+                                {% if request.resolver_match.url_name == 'del-user' %}active{%endif%}"
+                   href="{% url 'del-user' slug=request.user.username %}">Delete Account</a>
+            </div>
+
+
+        </div>
+        <div class="col-9 ml-auto bg-white">
+            <div class="row justify-content-center" style="margin-right: 0;margin-left: 0;">
+                <div class="col-lg-7 col-md-9 col-sm-11 ml-auto mr-auto" style="padding-right: 0;padding-left: 0;">
+                    <br>
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{%endblock%}

@@ -1,0 +1,67 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand mb-0 h1" href="">{{sitename}}</a>
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="">Posts<span class="sr-only">(current)</span></a>
+                </li>
+               
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                {% if request.user.is_authenticated %}
+
+                <ul class="navbar-nav mr-auto" id="dropdown">
+                    <li class="dropdown">
+                        <a aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" id="navbarDropdown"
+                           role="button">
+                            <div>
+                                {% if request.user.profile.image %}
+                                <img alt="{{ request.user.get_full_name }}" class="border rounded-circle border-white"
+                                     src="{{ request.user.profile.image.url }}" style="width:25px;"/>
+                                {% elif request.user.socialaccount_set.all.0.get_avatar_url %}
+                                <img alt="{{ request.user.get_full_name }}"
+                                     class="border rounded-circle border-white" src="{{ request.user.socialaccount_set.all.0.get_avatar_url }}"
+                                     style="width:25px;"/>
+                                <!--0 indicates the site used to sign up first-->
+                                {% else %}
+                                <img alt="{{ request.user.get_full_name }}" class="border rounded-circle border-white"
+                                     src="{% static 'images/profile.png' %}" style="width:25px;"/>
+                                {% endif %}
+                            </div>
+                        </a>
+                        <ul aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
+                            <li><a class="dropdown-item" href="{% url 'user-profile' slug=request.user.username %}">My
+                                Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'post:create' %}">Create Post</a></li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'settings' %}">Settings</a></li>
+                            {% if user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a></li>
+                            {% endif %}
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                {%else%}
+                <a class="btn btn-outline-light mr-2" href="{% url 'account_login' %}">Sign in</a>
+                <a class="btn btn-primary" href="{% url 'account_signup' %}">Sign up</a>
+                {%endif%}
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+
+</script>

@@ -1,0 +1,190 @@
+{% extends "account/base.html" %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "Sign Up" %}</h1>
+
+<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<p>{% blocktrans with site.name as site_name %}Please sign in with one
+    of your existing third party accounts.
+    for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+{% include "socialaccount/snippets/provider_list.html" with process="login" %}
+{% include "socialaccount/snippets/login_extra.html" %}
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+<br>
+<div class="row">
+    <hr class="col mr-2 ml-3">
+    <h4>OR</h4>
+    <hr class="col ml-2 mr-3">
+</div>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data"
+      novalidate>
+    {% csrf_token %}
+    <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+            {{ form.first_name|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+            {{ form.last_name|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+            {{ form.email|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+            {{ form.username|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+            {{ form.password1|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+            {{ form.password2|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+            {{ form.location|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+            <label>Image</label>
+            <div class="input-group">
+                <div class="custom-file">
+                    <label id="id_image_label" class="btn btn-outline-primary" for="id_image"> Browse <input type="file"
+                                                                                                             name="image"
+                                                                                                             accept="image/*"
+                                                                                                             class="custom-file-input clearablefileinput"
+                                                                                                             id="id_image"
+                                                                                                             hidden>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {{ form.x }}
+    {{ form.y }}
+    {{ form.width }}
+    {{ form.height }}
+
+
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <br>
+    <button type="submit" class="btn btn-primary mr-2">{% trans "Sign Up" %} &raquo;</button>
+</form>
+{% endblock %}
+
+
+{%block nocontainerbody%}
+<div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Crop the photo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <img src="" id="image" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group pull-left" role="group">
+                    <button type="button" class="btn btn-default js-zoom-in">
+                        <span class="glyphicon glyphicon-zoom-in"></span>
+                    </button>
+                    <button type="button" class="btn btn-default js-zoom-out">
+                        <span class="glyphicon glyphicon-zoom-out"></span>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                <button type="button" class="btn btn-primary js-crop-and-upload">Crop</button>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock nocontainerbody%}
+
+
+{% block javascript %}
+<script>
+$(function () {
+
+      /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+      $("#id_image").change(function () {
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $("#image").attr("src", e.target.result);
+            $("#modalCrop").modal("show");
+          }
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+      var $image = $("#image");
+      var cropBoxData;
+      var canvasData;
+      $("#modalCrop").on("shown.bs.modal", function () {
+        $image.cropper({
+          viewMode: 1,
+          aspectRatio: 1/1,
+          minCropBoxWidth: 200,
+          minCropBoxHeight: 200,
+          ready: function () {
+            $image.cropper("setCanvasData", canvasData);
+            $image.cropper("setCropBoxData", cropBoxData);
+          }
+        });
+      }).on("hidden.bs.modal", function () {
+        cropBoxData = $image.cropper("getCropBoxData");
+        canvasData = $image.cropper("getCanvasData");
+        $image.cropper("destroy");
+      });
+
+      $(".js-zoom-in").click(function () {
+        $image.cropper("zoom", 0.1);
+      });
+
+      $(".js-zoom-out").click(function () {
+        $image.cropper("zoom", -0.1);
+      });
+
+      /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+      $(".js-crop-and-upload").click(function () {
+        var cropData = $image.cropper("getData");
+        $("#id_x").val(cropData["x"]);
+        $("#id_y").val(cropData["y"]);
+        $("#id_height").val(cropData["height"]);
+        $("#id_width").val(cropData["width"]);
+        $('#modalCrop').modal('hide');
+        //$("#signup_form").submit();
+      });
+    });
+
+
+</script>
+{% endblock %}
+
+
+

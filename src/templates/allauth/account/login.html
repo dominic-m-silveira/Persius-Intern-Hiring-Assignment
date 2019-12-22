@@ -1,0 +1,71 @@
+{% extends "account/base.html" %}
+
+{% load crispy_forms_tags %}
+
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "Sign In" %}</h1>
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<p>{% blocktrans with site.name as site_name %}Please sign in with one
+    of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+    for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+{% include "socialaccount/snippets/provider_list.html" with process="login" %}
+{% include "socialaccount/snippets/login_extra.html" %}
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+<br>
+<div class="row">
+    <hr class="col mr-2 ml-3">
+    <h4>OR</h4>
+    <hr class="col ml-2 mr-3">
+</div>
+<form class="login" method="POST" action="{% url 'account_login' %}" novalidate>
+    {% csrf_token %}
+    <!--{{ form|crispy }}-->
+    {% include "components/errors/error_box_type1.html" with errors=form.non_field_errors error_print=form.non_field_errors|striptags %}
+
+    <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+            {{ form.login|as_crispy_field }}
+        </div>
+
+        <div class="form-group col-md-6 mb-0">
+            {{ form.password|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+
+            <div class="custom-control custom-checkbox" id="div_id_{{ form.remember.name }}">
+                <input type="checkbox" name="{{ form.remember.name }}" class="custom-control-input"
+                       id="id_{{ form.remember.name }}">
+                <label for="id_{{ form.remember.name }}" class="custom-control-label">{{ form.remember.label }}</label>
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="form-row">-->
+    <!--<div class="form-group col-md-12 mb-0">-->
+    <!--{{ form.remember|as_crispy_field }}-->
+    <!--</div>-->
+    <!--</div>-->
+    <br>
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <button type="submit" class="btn btn-primary mr-2">Sign in &raquo;</button>
+    <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+</form>
+
+
+{% endblock %}
