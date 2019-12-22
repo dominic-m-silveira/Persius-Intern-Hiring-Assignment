@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+{% load static %}
+
+{%block head_title%}
+Posts
+{%endblock head_title%}
+
+
+{%block body%}
+<form class="form" method="POST">
+    {% csrf_token %}
+    <button id="delete" type="submit">Confirm Delete</button>
+    <button onclick="window.history.back();" type="button">Cancel</button>
+</form>
+
+
+{%endblock%}
+
+
+{% block javascript %}
+<script>
+// $(document).ready(function(){
+//     $("#delete").trigger('click');
+// });
+
+</script>
+{%endblock%}

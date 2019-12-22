@@ -7,8 +7,7 @@ Profile
 
 
 {%block body%}
-{% include "posts/post_modal.html" %}
-{% include "user/users_modal.html" with followingusers=object.profile.get_following.all followersusers=object.followed_by.all %}
+
 <div class="container">
     <div style="align-items: center;justify-content: center;text-align: center;">
 
@@ -29,25 +28,8 @@ Profile
             <h3><b>{{object.username}}</b></h3>
         </div>
         <br>
-        {% ifnotequal request.user.username object.username %}
-        <p>
-            <a class="user-follow btn btn-primary" data-id='{{object.username}}'
-               href='{{object.profile.get_follow_url}}' id='follow-{{object.username}}'>
-                {% if following %}Unfollow{% else %}Follow{% endif %}
-            </a>
-        </p>
-        {% endifnotequal %}
 
-        <button class="user-following-btn btn btn-outline-secondary" data-count="{{object.profile.get_following.count}}" data-id='{{request.user.username}}'
-                data-target="#FollowingModalLong" data-toggle="modal"
-                id="following-count-{{object.username}}" type="button">
-            Following: {{object.profile.get_following.count}}
-        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button class="user-followers-btn btn btn-outline-secondary" data-count="{{object.followed_by.all.count}}" data-id='{{request.user.username}}'
-                data-target="#FollowersModalLong" data-toggle="modal"
-                id="followers-count-{{object.username}}" type="button">
-            Followers: {{object.followed_by.all.count}}
-        </button>
+
 
         <br><br>
         <h4>Posts</h4>

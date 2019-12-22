@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.twitter',
 
     'user_registration',
+    'posts'
 ]
 
 # SOCIALACCOUNT_PROVIDERS = {
@@ -114,6 +115,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'templates', 'allauth'),
+            os.path.join(BASE_DIR, 'posts', 'templates','posts'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand mb-0 h1" href="">{{sitename}}</a>
+        <a class="navbar-brand mb-0 h1" href="{% url 'post:list' %}">{{sitename}}</a>
         <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
                 data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="">Posts<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{% url 'post:list' %}">Posts<span class="sr-only">(current)</span></a>
                 </li>
                
             </ul>
@@ -38,7 +38,6 @@
                         <ul aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
                             <li><a class="dropdown-item" href="{% url 'user-profile' slug=request.user.username %}">My
                                 Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'post:create' %}">Create Post</a></li>
                             <li>
                                 <div class="dropdown-divider"></div>
                             </li>

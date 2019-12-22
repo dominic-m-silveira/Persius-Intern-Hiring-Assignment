@@ -1,0 +1,15 @@
+{%extends 'base.html'%}
+{% load static %}
+
+{%block head_title%}
+Posts
+{%endblock head_title%}
+
+
+{%block body%}
+<form class="form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update Post">
+</form>
+{%endblock%}

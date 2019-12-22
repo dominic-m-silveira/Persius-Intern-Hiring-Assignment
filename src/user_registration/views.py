@@ -77,37 +77,11 @@ class UserDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(UserDetailView, self).get_context_data(*args, **kwargs)
-        context['following'] = Profile.objects.is_following(
-            self.request.user, self.kwargs['slug'])
         user_profile = Profile.objects.get(user=self.request.user)
-        context["followusers"] = [
-            user.username for user in user_profile.following.all()]
-        print("Followed by:", context["followusers"])
         # print("get_context_data",self.args, self.kwargs,self.request.user,self.kwargs['slug'])
         print(context)
         return context
 
-
-class UserFollowView(View):
-    def get(self, request, slug, *args, **kwargs):
-        print(*args, **kwargs)
-        toggle_user = get_object_or_404(User, username__iexact=slug)
-        if request.user.is_authenticated:
-            print("Hey", request.user, toggle_user)
-            is_following = Profile.objects.toggle_follow(
-                request.user, toggle_user)
-        return redirect("user-profile", slug=self.request.user.username)
-
-
-class UserFollowRemoveView(View):
-    def get(self, request, slug, *args, **kwargs):
-        print(*args, **kwargs)
-        toggle_user = get_object_or_404(User, username__iexact=slug)
-        if request.user.is_authenticated:
-            print("Hey", request.user, toggle_user)
-            is_following = Profile.objects.toggle_remove_follow(
-                request.user, toggle_user)
-        return redirect("user-profile", slug=self.request.user.username)
 
 
 def home(request):

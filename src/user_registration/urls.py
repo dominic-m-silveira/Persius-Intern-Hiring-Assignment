@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django.contrib.auth.decorators import login_required
-from .views import home, secret_page, settings, UserDetailView, UserFollowView, UserFollowRemoveView, \
+from .views import home, secret_page, settings, UserDetailView, \
     UserDetailsUpdateView, UserProfileDetailsUpdateView, UserDeleteView
 from allauth.account.views import EmailView as allauth_AccountEmail
 
@@ -14,6 +14,4 @@ urlpatterns = [
     path('settings/<slug>/delete/', login_required(UserDeleteView.as_view()), name='del-user'),
     path('settings/id/<int:pk>/update/', login_required(UserProfileDetailsUpdateView.as_view()), name='upd-profile'),
     path('profile/<slug>/', login_required(UserDetailView.as_view()), name='user-profile'),
-    path('profile/<slug>/follow/', login_required(UserFollowView.as_view()), name='user-follow'),
-    path('profile/<slug>/followremove/', login_required(UserFollowRemoveView.as_view()), name='user-follow-remove'),
 ]
