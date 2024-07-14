@@ -1,7 +1,7 @@
 # Convin Assignment 
 ## Clone Repository
 ```
-git clone https://github.com/dms24081999/Persius-Assignment.git
+git clone https://github.com/dominic-m-silveira/Persius-Assignment.git
 cd Convin-Assignment
 ```
 ***
